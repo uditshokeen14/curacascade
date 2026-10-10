@@ -3939,6 +3939,9 @@ with tab_forecast:
                 "top_risk_driver": "Primary Risk Driver",
             })
 
+            display_queue = display_queue.copy()
+            display_queue["Downgrade Risk Score"] = display_queue["Downgrade Risk Score"] * 100
+
             st.dataframe(
                 display_queue[[
                     "Gene Symbol",
@@ -3957,7 +3960,7 @@ with tab_forecast:
                         "Downgrade Risk Score",
                         format="%.1f%%",
                         min_value=0.0,
-                        max_value=1.0,
+                        max_value=100.0,
                         help="Predicted probability of future downgrade upon re-appraisal",
                     ),
                     "Assigned Risk Tier": st.column_config.TextColumn("Risk Tier", width="medium"),
