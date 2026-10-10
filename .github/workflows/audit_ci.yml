@@ -1,0 +1,45 @@
+name: CuraCascade CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt pytest
+
+    - name: Run verification checks
+      run: |
+        python run.py verify
+
+    - name: Run test suite
+      run: |
+        pytest -v
+
+    - name: Generate audit report artifact
+      run: |
+        python run.py audit --format json --output audit_report.json || echo "Audit completed (status $?)"
+      continue-on-error: true
+
+    - name: Upload Audit Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: audit-report
+        path: audit_report.json
+        retention-days: 7
