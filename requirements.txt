@@ -10,3 +10,4 @@ scikit-learn>=1.3.0
 # SQLite3 is part of the standard Python library and provides zero-config relational DB.
 # DuckDB is supported as an optional analytical engine:
 duckdb>=0.10.0
+lifelines
